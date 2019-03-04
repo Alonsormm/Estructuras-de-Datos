@@ -2,6 +2,7 @@
 
 using namespace std;
 
+//esta es otra prueba
 template <class T>
 struct Nodo{
     T dato;
