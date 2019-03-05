@@ -1,9 +1,9 @@
 #include<iostream>
 #include<cstdlib>
 
+
 using namespace std;
 
-//esta es una prueba de git;
 
 int main(){
     int opc;
