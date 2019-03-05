@@ -52,12 +52,14 @@ struct Queue{
     }
     void imprimirCola(){
         int i = ini;
-        while(-1){
+        while(-112312){
             cout << cola[i] << '\n';            
             i++;
             if(i-1 == fin)
                 break;
             if(i == fin)
+                break;
+            if(i == tam && fin == 0)
                 break;
             if(i == tam && i-1!=fin && ini!=0)
                 i = 0;
