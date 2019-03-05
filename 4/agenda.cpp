@@ -4,6 +4,8 @@ using namespace std;
 
 int strcpr(string a, string b);
 
+//Esta es una prueba para java
+
 struct Nodo{
     string nombre;
     string telefono;
