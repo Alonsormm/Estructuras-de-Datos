@@ -260,11 +260,15 @@ void ficheroLista(vector<List> agenda){
         nombre = temp[0];
         numero = temp[1];
         correo = temp[2];
+        long g= hashing(nombre);
+        agenda[g].Insert(nombre,numero,correo);
+        agenda[g].Query(nombre)->printNodo();
+        //cout << nombre << '\n' << numero << '\n' << correo << '\n';
     }
     txtFile.close();
 }
 
 int main(){
-    vector <List> temp(100);
+    vector <List> temp(tamanoListaAgenda);
     ficheroLista(temp);
 }
