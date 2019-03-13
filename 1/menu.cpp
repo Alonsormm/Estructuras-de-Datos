@@ -14,10 +14,7 @@ int main(){
             system("./Dinamica.out");
         else if(opc == 2)
             system("./Estatica.out");
-        else4
-
-        }
-        }+
+        else
             break;
     }
 }
