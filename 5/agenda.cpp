@@ -1,6 +1,8 @@
 #include<iostream>
-
+#include<vector>
+#include<fstream>
 using namespace std;
+#define tamanoListaAgenda 1000
 
 int strcpr(string a, string b){
     int tama = a.size();
@@ -20,6 +22,18 @@ int strcpr(string a, string b){
     }
     return 0;
 }
+
+unsigned long hashing(string str){
+    unsigned long hash = 5381;
+    int c;
+    for(int i = 0 ; i < str.size(); i++){
+        c = str[i];
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+
+    return hash&(tamanoListaAgenda-1);
+}
+
 
 struct Nodo{
     string nombre;
@@ -155,28 +169,6 @@ struct List{
         }
         return NULL;
     }
-    
-    int imprimirCercanos(string n){
-        int encontro = 0;
-        if(isEmpty())
-            return 0;
-        Nodo* temp = new Nodo();
-        temp = ini -> sig;
-        while(temp){
-            if(temp->nombre.find(n) != string::npos){
-                temp->printNodo();
-                encontro = 1;
-            }
-            temp = temp -> sig;          
-        }
-        if(encontro){
-            cout << "Pero se encontraron estos registros\n";
-            return 1;
-        }
-        cout << "No se encontraron registros parecidos\n";
-        return 0;
-    }
-    
     void Delate(string n){
         Nodo* temp = new Nodo();
         temp = Query(n);
@@ -247,90 +239,13 @@ struct List{
     }
 };
 
-void menu(){
-    List l;
-    int opc, eliminar;
-    string nombre, telefono, email;
-    cout << "Bienvenidos a la Agenda Enlazada\n";
-    while(1){
-        cout << "Seleccione que desea hacer:\n1.-Agregar entrada a la agenda\n2.-Eliminar entrada de la agenda\n3.-Consultar\n4.-Imprimir agenda\n5.-Modificar datos\n6.-Salir\n";
-        cin >> opc;
-        if(opc == 1){
-            cout << "Dame el nuevo nombre completo empezando por nombre: ";
-            cin.ignore(256, '\n');
-            getline(cin, nombre);
-            cout << "Dame el telefono: ";
-            cin >> telefono;
-            cout << "Dame Email: ";
-            cin >> email;
-            l.Insert(nombre,telefono,email);
-            cout << "El registro se hizo correctamnte: \n\n";
-            l.Query(nombre)->printNodo();
-        }
-        else if(opc == 2){
-            if(l.isEmpty()){
-                cout << "La lista esta vacia :c\n";
-                continue;
-            }
-            cout << "Dame el nuevo nombre completo empezando por nombre que desea eliminar: ";
-            cin.ignore(256, '\n');
-            getline(cin, nombre, '\n');
-            Nodo* temp;
-            temp = l.Query(nombre);
-            if(temp){
-                temp->printNodo();
-                cout << "1.-Eliminar registro\n2.-No hacer nada\n\n";
-                cin>> eliminar;
-                if(eliminar == 1)
-                    l.Delate(nombre);
-                else
-                    continue;
-            }
-            else
-                cout << "El registro no existe\n";
-        }
-        else if(opc == 3){
-            if(l.isEmpty()){
-                cout << "La lista esta vacia :c\n";
-                continue;
-            }
-            Nodo* temp = new Nodo();
-            cout << "Dame el nombre que desea buscar: ";
-            cin.ignore(256, '\n');
-            getline(cin, nombre, '\n');
-            temp = l.Query(nombre);
-            if(!temp){
-                if(!l.imprimirCercanos(nombre));
-                continue;
-            }
-            cout << "El registro es: \n\n";
-            temp -> printNodo();
-        }
-        else if(opc == 4){
-            if(l.isEmpty()){
-                cout << "La lista esta vacia :c\n";
-                continue;
-            }
-            l.printList();
-        }
-        else if(opc == 5){
-            if(l.isEmpty()){
-                cout << "La lista esta vacia :c\n";
-                continue;
-            }
-            cout << "Dame el nombre que desea modificar: ";
-            cin.ignore(256, '\n');
-            getline(cin, nombre, '\n');
-            l.Modificar(nombre);
-        }
-        else{
-            break;
-        }
-    }
+void ficheroLista(vector<List> temp){
+    ofstream txtFile;
+    txtFile.open("Prueba.txt");
+    txtFile << "Hola\n";
 }
 
-
-
 int main(){
-    menu();
+    vector <List> temp(100);
+    ficheroLista(temp);
 }
