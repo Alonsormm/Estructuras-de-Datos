@@ -1,6 +1,4 @@
-#include<iostream>
-#include<vector>
-#include<fstream>
+#include <bits/stdc++.h>
 using namespace std;
 #define tamanoListaAgenda 1000
 
@@ -239,10 +237,30 @@ struct List{
     }
 };
 
-void ficheroLista(vector<List> temp){
-    ofstream txtFile;
+vector<string> dividir(string dato){
+    vector<string> temp(3);
+    int j = 0;
+    for(int i = 0 ; i < dato.size(); i++){
+        if(dato[i]==','){
+            j++;
+            continue;
+        }
+        temp[j]+=dato[i];
+    }
+    return temp;
+}
+
+void ficheroLista(vector<List> agenda){
+    fstream txtFile;
+    string dato, nombre, numero, correo;
+    vector<string> temp(3);
     txtFile.open("Prueba.txt");
-    txtFile << "Hola\n";
+    while(getline(txtFile,dato)){
+        temp = dividir(dato);
+        nombre = temp[0];
+        numero = temp[1];
+        correo = temp[2];
+    }
     txtFile.close();
 }
 
