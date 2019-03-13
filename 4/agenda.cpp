@@ -2,9 +2,24 @@
 
 using namespace std;
 
-int strcpr(string a, string b);
-
-//Esta es una prueba para java
+int strcpr(string a, string b){
+    int tama = a.size();
+    int tamb = b.size();
+    int tamF;
+    if(tama >= tamb)
+        tamF = tamb;
+    else
+        tamF = tama;
+    for(int i = 0; i < tamF; i++){
+        if(a[i] == b[i])
+            continue;
+        else if(a[i]>b[i])
+            return 1;
+        else
+            return -1;
+    }
+    return 0;
+}
 
 struct Nodo{
     string nombre;
@@ -107,11 +122,11 @@ struct List{
             InsertFirst(n,t,e);
             return;
         }
-        if(strcpr(ini -> sig -> nombre[0]) > strcpr(n[0]){
+        if(strcpr(ini -> sig -> nombre, n)==1){
             InsertFirst(n,t,e);
             return;
         }
-        if(strcmp(fin -> sig -> nombre[0]) < strcpr(n[0])){
+        if(strcpr(fin -> sig -> nombre, n)==-1){
             InsertLast(n,t,e);
             return;
         }
@@ -232,24 +247,6 @@ struct List{
     }
 };
 
-int strcpr(string a, string b){
-    int tama = a.size();
-    int tamb = b.size();
-    int tamF;
-    if(tama >= tamb)
-        tamF = tamb;
-    else
-        tamF = tama;
-    for(int i = 0; i < tamF; i++){
-        if(a[i] == b[i])
-            continue;
-        else if(a[i]>b[i])
-            return 1;
-        else
-            return -1;
-    }
-}
-
 void menu(){
     List l;
     int opc, eliminar;
@@ -331,6 +328,7 @@ void menu(){
         }
     }
 }
+
 
 
 int main(){
