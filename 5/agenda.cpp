@@ -250,7 +250,7 @@ vector<string> dividir(string dato){
     return temp;
 }
 
-void ficheroLista(vector<List> agenda){
+vector<List> ficheroLista(vector<List> agenda){
     fstream txtFile;
     string dato, nombre, numero, correo;
     vector<string> temp(3);
@@ -266,9 +266,10 @@ void ficheroLista(vector<List> agenda){
         //cout << nombre << '\n' << numero << '\n' << correo << '\n';
     }
     txtFile.close();
+    return agenda;
 }
 
 int main(){
     vector <List> temp(tamanoListaAgenda);
-    ficheroLista(temp);
+    temp = ficheroLista(temp);
 }
