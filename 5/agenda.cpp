@@ -243,6 +243,7 @@ void ficheroLista(vector<List> temp){
     ofstream txtFile;
     txtFile.open("Prueba.txt");
     txtFile << "Hola\n";
+    txtFile.close();
 }
 
 int main(){
