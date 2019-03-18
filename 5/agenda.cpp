@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define tamanoListaAgenda 1000
+#define tamanoListaAgenda 100000
 
 int strcpr(string a, string b){
     int tama = a.size();
@@ -284,6 +284,7 @@ void imprimirAgenda(vector<List> &agenda){
     for(int i = 0 ; i < agenda.size(); i++){
         if(agenda[i].isEmpty())
             continue;
+        cout << i << '\n';
         agenda[i].printList();
     }
 }
