@@ -186,14 +186,14 @@ struct List{
         DelateDespues(temp);
     }
 
-    void Modificar(string n){
+    Nodo* Modificar(string n){
         Nodo* temp = new Nodo();
         Nodo* nFinal;
         temp = Query(n);
         int opc;
         if(!temp){
             cout << "No se encontro el registro que quiere modificar\n";
-            return;
+            return NULL;
         }
         string nombreTemp = n;
         string telTemp = temp -> telefono;
@@ -239,8 +239,8 @@ struct List{
             }
             if(opc == 5){
                 Delate(nombreTemp);
-                Insert(nombreTemp,aTemp,telTemp,emTemp);
-                return;
+                //Insert(nombreTemp,aTemp,telTemp,emTemp);
+                return temp;
             }
         }
         
@@ -330,7 +330,7 @@ void menu(vector <List> &agenda){
     cout << "Bienvenido a la agenda c++" << endl;
     while(1934){
         cout << "Ingrese la opcion que desea\n";
-        cout << "1.-Agregar Dato\n2.-Consultar Dato\n3.-Imprimir agenda\n";
+        cout << "1.-Agregar Dato\n2.-Consultar Dato\n3.-Modificar Dato\n4.-Imprimir agenda\n";
         cin >> opc;
         if(opc == '1'){
             agregarRegistro(agenda);
@@ -339,6 +339,19 @@ void menu(vector <List> &agenda){
             consultaRegistro(agenda);
         }
         else if(opc == '3'){
+            string nombreTemp;
+            cout << "Dame el nombre completo de la entrada que deaseas modificar: ";
+            cin.ignore(256, '\n');
+            getline(cin, nombreTemp);
+            int hash = hashing(nombreTemp);
+            cout << hash;
+            Nodo* temp = agenda[hash].Modificar(nombreTemp);
+            if(temp == NULL)
+                continue;
+            hash = hashing(temp -> nombre);
+            agenda[hash].Insert(temp->nombre, temp -> address, temp -> telefono, temp -> email);
+        }
+        else if(opc == '4'){
             imprimirAgenda(agenda);
         }
         else{
