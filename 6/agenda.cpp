@@ -70,7 +70,9 @@ void insert(Nodo* &raiz, string nombre, string direccion, string numero, string 
 }
 
 Nodo* Query(Nodo* &raiz, string nombre){
-	if (raiz->nombre == nombre || raiz == NULL){
+	if(raiz==NULL)
+		return NULL;
+	if (raiz->nombre == nombre){
         return raiz;
     }
 	if(strcpr(nombre,raiz->nombre) == -1)
@@ -122,7 +124,7 @@ void consultaRegistro(Nodo* &raiz){
     cin.ignore(256, '\n');
     getline(cin, nombre, '\n');
     Nodo* temp = Query(raiz,nombre);
-    if(temp){
+    if(temp!=NULL){
         cout << "El registro fue encontrado!\n";
         temp->printNodo();
         return;
@@ -130,6 +132,60 @@ void consultaRegistro(Nodo* &raiz){
     cout << "El registro no existe :c \n";
 }
 
+void modificarRegistro(Nodo* raiz){
+	string nombreTemp,aTemp,telTemp,emTemp;
+	int opc;
+	cout << "Dame el nombre completo de la entrada que deaseas modificar: ";
+	cin.ignore(256, '\n');
+	getline(cin, nombreTemp);
+	Nodo* temp = Query(raiz,nombreTemp);
+	if(temp==NULL){
+        cout << "El registro no existe:c";
+        return;
+    }
+	while(1){
+		cout << "El registro que quiere modificar es el siguiente: \n\n";
+        temp -> printNodo();
+        cout << "Seleccione que desea hacer:\n1.-Modificar nombre\n2.-Modificar direccion\n3.-Modificar Telefono\n4.-Modificar Email\n5.-Salir\n";
+        cin >> opc;
+		if(opc == 1){
+			nombreTemp;
+			cout << "Dame el nuevo nombre completo empezando por nombre: ";
+            cin.ignore(256, '\n');
+            getline(cin, nombreTemp, '\n');
+            temp -> nombre = nombreTemp;
+            cout << "El registro fue modificado: \n";
+			temp -> printNodo();
+        }
+		if(opc == 2){
+			cout << "Dame la nueva direccion: ";
+            cin.ignore(256, '\n');
+            getline(cin, aTemp, '\n');
+            temp -> direccion = aTemp;
+            cout << "El registro fue modificado: \n";
+            temp -> printNodo();
+		}
+        if(opc == 3){
+			telTemp;
+            cout << "Dame el nuevo telefono: ";
+            cin >> telTemp;
+            temp -> numero = telTemp;
+            cout << "El registro fue modificado: \n";
+            temp -> printNodo();
+        }
+        if(opc == 4){
+            emTemp;
+            cout << "Dame el nuevo Email: ";
+            cin >> emTemp;
+            temp -> correo = emTemp;
+            cout << "El registro fue modificado: \n";
+            temp -> printNodo();
+        }
+        if(opc == 5){
+            return;
+        }
+	}
+}
 
 
 void menu(){
@@ -148,10 +204,7 @@ void menu(){
             consultaRegistro(raiz);
         }
         else if(opc == '3'){
-            string nombreTemp;
-            cout << "Dame el nombre completo de la entrada que deaseas modificar: ";
-            cin.ignore(256, '\n');
-            getline(cin, nombreTemp);
+			modificarRegistro(raiz);
         }
         else if(opc == '4'){
             inorder(raiz);
