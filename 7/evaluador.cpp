@@ -10,7 +10,7 @@ struct Nodo{
 	Nodo(string d):dato(d),left(NULL),right(NULL){}
 	Nodo():left(NULL),right(NULL){}
 	void printNodo(){
-        cout << dato;
+        cout << dato << ' ';
 	}
 };
  
@@ -30,6 +30,20 @@ void postorder(Nodo* &raiz){
 	raiz->printNodo();
 }
 
+bool isOperand(string c){
+	return c == "+" || c == "-" || c == "*" || c == "/" || c == "^";
+}
+
+bool isOperator(char c){
+    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+}
+
+bool isNumber(char c){
+    return c >= '0' && c <= '9';
+}
+
+
+
 int precedencia(char c){
 	if(c == '+' || c == '-')
 		return 1;
@@ -42,7 +56,7 @@ int precedencia(char c){
 
 bool existeOperando(string t){
 	for(int i = 0; i < t.size(); i++)
-		if(t[i] == '+' || t[i] == '-' ||t[i] == '*' ||t[i] == '/'||'^')
+		if(t[i] == '+' || t[i] == '-' ||t[i] == '*' ||t[i] == '/'||t[i] == '^')
 			return 1;
 }
 
@@ -51,8 +65,23 @@ void expresionToTree(Nodo* &raiz,string t){
 		raiz = new Nodo(t);
 		return;
 	}
-	//cout << t<<'\n';
-	int temp = 4;
+	int tam = t.size();
+	if(t[0] == '('){
+		if(t[tam-1]==')'){
+			int count = 0;
+			for(int i = 0; i < tam; i++){
+				if(t[i] == ')'){
+					if(i == tam-1){
+						t = t.substr(1,tam-2);
+					}
+					else
+						break;
+				}
+			}
+		}
+	}
+	
+	int temp = 5;
 	int indice = 0;
 	int parentesis = 0;
 	string a;
@@ -73,41 +102,81 @@ void expresionToTree(Nodo* &raiz,string t){
 	raiz = new Nodo(a+=t[indice]);
 	string izq = t.substr(0,indice);
 	string der = t.substr(indice+1,t.size());
-	if(izq[0] == '(' && izq[izq.size()-1] == ')')
-        izq = izq.substr(1,izq.size()-2);
-	if(der[0] == '(' && der[der.size()-1] == ')')
-        der = der.substr(1,der.size()-2);
+
 	expresionToTree(raiz->left,izq);
 	expresionToTree(raiz->right, der);
 }
 
-double eval(Nodo* &root){
-	string t =""; 
-	t+=root->dato;
-	if(!root)
-		return 0;
-	if(!root->left && !root->right)
-		return strtof(t);
-	float l_val = eval(root->left);
-	float r_val = eval(root->right);
-	if(root->dato == "+")
-		return l_val + r_val;
-	if(root->dato == "-")
-        return l_val - r_val;
-	if(root->dato == "*")
-        return l_val * r_val;
-	if(root->dato == "/")
-        return l_val / r_val;
-	if(root->dato == "^")
-        return pow(l_val,r_val);
+float evaluar(Nodo* &raiz){
+	if(isOperand(raiz->dato)){
+		if(raiz->dato == "+")
+			return evaluar(raiz->left) + evaluar(raiz->right);
+		if(raiz->dato == "-")
+            return evaluar(raiz->left) - evaluar(raiz->right);
+		if(raiz->dato == "*")
+            return evaluar(raiz->left) * evaluar(raiz->right);
+		if(raiz->dato == "/")
+            return evaluar(raiz->left) / evaluar(raiz->right);
+		if(raiz->dato == "^")
+            return pow(evaluar(raiz->left),evaluar(raiz->right));
+	}
+	return atof(raiz->dato.c_str());
 }
 
+string agregarFaltantes(string s){
+    string temp = s;
+    temp.erase( std::remove( temp.begin(), temp.end(), ' '), temp.end());
+    int tam = temp.size()-1;
+    for(int i = 0 ; i < tam; i++){
+        if(temp[i] == '(' && isOperator(temp[i+1]))
+            temp.insert(i+1,"0");
+        if((temp[i] == '-' && isOperator(temp[i+1])) || (temp[i] == '+' && isOperator(temp[i+1]))){
+            temp.insert(i+1,"(");
+            temp.insert(i+2,"0");
+            temp.insert(i+5,")");
+        }
+        if((temp[i] == '*' && isOperator(temp[i+1])) || (temp[i] == '/' && isOperator(temp[i+1]))){
+            temp.insert(i+1,"(");
+            temp.insert(i+2,"1");
+            temp.insert(i+5,")");
+        }
+        if(temp[i] == '(' && isNumber(temp[i-1]))
+            temp.insert(i,"*");
+        if(temp[i] == ')' && isNumber(temp[i+1]))
+            temp.insert(i+1,"*");
+    }
+    return temp;
+}
+
+
+string comprobar(){
+    string expresion;
+    while(7){
+        bool error = 0;
+        cout << "Introduzca la expresion a evaluar: " << '\n';
+        getline(cin, expresion);
+        expresion = agregarFaltantes(expresion);
+        for(int i = 1 ; i  < expresion.size(); i++){
+            if(isOperator(expresion[i]) && isOperator(expresion[i-1])){
+                error = 1;
+                break;
+            }
+        }
+        if(error){
+            cout << "Esta mal esrita la expresion, intente de nuevo\n";
+            continue;
+        }
+        else
+            break;
+    }
+    return expresion;
+}
+
+
+
 int main(){
-	string exp = "2*5-2";
+	string exp = comprobar();
 	Nodo* ar = new Nodo();
 	expresionToTree(ar,exp);
-	inorder(ar);
-	cout << '\n';
-	postorder(ar);
-	cout << eval(ar) << '\n';
+	cout << "El resultado es: " << evaluar(ar) << '\n';
 }
