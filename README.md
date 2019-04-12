@@ -21,7 +21,19 @@ Practica 4: 26 de Febrero del 2019
 
 Uso de una lista simplemene ligada para la implementacion de una agenda en la cual se deberan guardar los datos generales de una persona y cada que se guarde un nuevo contacto o se modifique se ordene alfabeticamente de forma lexicografica.
 
-Practica 5:
+Practica 5: 
 
 Uso de funcion hash, para la implementacion de una agenda.
+
+Practica 6:
+
+Uso de arboles binarios para la implementacion de una agenda.
+ 
+Practica 7
+
+Uso de arboles binarios para la elaboracion de un evaluador de funciones.
+
+Practica 8:
+
+Uso de arboles binarios para la impleentacion de una agenda.
 
