@@ -42,6 +42,15 @@ bool isNumber(char c){
     return c >= '0' && c <= '9';
 }
 
+bool isVariable(char c){
+	return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+}
+
+bool isVariable(string c){
+    return c >= "a" && c <= "z" || c >= "A" && c <= "Z";
+}
+
+
 
 
 int precedencia(char c){
@@ -107,18 +116,168 @@ void expresionToTree(Nodo* &raiz,string t){
 	expresionToTree(raiz->right, der);
 }
 
-float evaluar(Nodo* &raiz){
+float evaluar(Nodo* &raiz, vector<pair<char,int>> a){
 	if(isOperand(raiz->dato)){
-		if(raiz->dato == "+")
-			return evaluar(raiz->left) + evaluar(raiz->right);
-		if(raiz->dato == "-")
-            return evaluar(raiz->left) - evaluar(raiz->right);
-		if(raiz->dato == "*")
-            return evaluar(raiz->left) * evaluar(raiz->right);
-		if(raiz->dato == "/")
-            return evaluar(raiz->left) / evaluar(raiz->right);
-		if(raiz->dato == "^")
-            return pow(evaluar(raiz->left),evaluar(raiz->right));
+		if(raiz->dato == "+"){
+			if(isVariable(raiz->left->dato[0]) && isVariable(raiz->right->dato[0])){
+				char var1,var2;
+				int valor1,valor2;
+				var1 = raiz->left->dato[0];
+				var2 = raiz->right->dato[0];
+				for(pair<char,int> b: a){
+					if(var1 == b.first)
+						valor1 = b.second;
+					if(var2 == b.first)
+						valor2 = b.second;
+				}
+				return valor1+valor2;
+			}
+			else if(isVariable(raiz->left->dato[0])){
+				for(pair<char,int> b: a){
+					if(b.first == raiz->left->dato[0]){
+						return b.second + evaluar(raiz->right,a);
+					}
+				}
+			}
+			else if(isVariable(raiz->right->dato)){
+				for(pair<char,int> b: a){
+                    if(b.first == raiz->right->dato[0]){
+                        return evaluar(raiz->left,a)+b.second;
+                    }
+                }
+
+			}
+			else
+				return evaluar(raiz->left,a) + evaluar(raiz->right,a);
+		}
+		if(raiz->dato == "-"){
+			if(isVariable(raiz->left->dato[0]) && isVariable(raiz->right->dato[0])){
+                char var1,var2;
+                int valor1,valor2;
+                var1 = raiz->left->dato[0];
+                var2 = raiz->right->dato[0];
+                for(pair<char,int> b: a){
+                    if(var1 == b.first)
+                        valor1 = b.second;
+                    if(var2 == b.first)
+                        valor2 = b.second;
+                }
+                return valor1-valor2;
+            }
+            else if(isVariable(raiz->left->dato[0])){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->left->dato[0]){
+                        return b.second - evaluar(raiz->right,a);
+                    }
+                }
+            }
+            else if(isVariable(raiz->right->dato)){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->right->dato[0]){
+                        return evaluar(raiz->left,a)-b.second;
+                    }
+                }
+
+            }
+            else
+                return evaluar(raiz->left,a) - evaluar(raiz->right,a);
+		}
+		if(raiz->dato == "*"){
+			if(isVariable(raiz->left->dato[0]) && isVariable(raiz->right->dato[0])){
+                char var1,var2;
+                int valor1,valor2;
+                var1 = raiz->left->dato[0];
+                var2 = raiz->right->dato[0];
+                for(pair<char,int> b: a){
+                    if(var1 == b.first)
+                        valor1 = b.second;
+                    if(var2 == b.first)
+                        valor2 = b.second;
+                }
+                return valor1*valor2;
+            }
+            else if(isVariable(raiz->left->dato[0])){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->left->dato[0]){
+                        return b.second * evaluar(raiz->right,a);
+                    }
+                }
+            }
+            else if(isVariable(raiz->right->dato)){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->right->dato[0]){
+                        return evaluar(raiz->left,a)*b.second;
+                    }
+                }
+
+            }
+            else
+                return evaluar(raiz->left,a) * evaluar(raiz->right,a);
+		}
+		if(raiz->dato == "/"){
+			if(isVariable(raiz->left->dato[0]) && isVariable(raiz->right->dato[0])){
+                char var1,var2;
+                int valor1,valor2;
+                var1 = raiz->left->dato[0];
+                var2 = raiz->right->dato[0];
+                for(pair<char,int> b: a){
+                    if(var1 == b.first)
+                        valor1 = b.second;
+                    if(var2 == b.first)
+                        valor2 = b.second;
+                }
+                return valor1/valor2;
+            }
+            else if(isVariable(raiz->left->dato[0])){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->left->dato[0]){
+                        return b.second / evaluar(raiz->right,a);
+                    }
+                }
+            }
+            else if(isVariable(raiz->right->dato)){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->right->dato[0]){
+                        return evaluar(raiz->left,a)/b.second;
+                    }
+                }
+
+            }
+            else
+                return evaluar(raiz->left,a) / evaluar(raiz->right,a);
+		}
+		if(raiz->dato == "^"){
+			if(isVariable(raiz->left->dato[0]) && isVariable(raiz->right->dato[0])){
+                char var1,var2;
+                int valor1,valor2;
+                var1 = raiz->left->dato[0];
+                var2 = raiz->right->dato[0];
+                for(pair<char,int> b: a){
+                    if(var1 == b.first)
+                        valor1 = b.second;
+                    if(var2 == b.first)
+                        valor2 = b.second;
+                }
+                return pow(valor1,valor2;
+            }
+            else if(isVariable(raiz->left->dato[0])){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->left->dato[0]){
+                        return pow(b.second,evaluar(raiz->right,a));
+                    }
+                }
+            }
+            else if(isVariable(raiz->right->dato)){
+                for(pair<char,int> b: a){
+                    if(b.first == raiz->right->dato[0]){
+                        return pow(evaluar(raiz->left,a),b.second);
+                    }
+                }
+
+            }
+            else
+                return pow(evaluar(raiz->left,a),evaluar(raiz->right,a));
+		}
 	}
 	return atof(raiz->dato.c_str());
 }
@@ -172,11 +331,35 @@ string comprobar(){
     return expresion;
 }
 
+void var(string exp,vector<pair<char,int>> &variables){
+	int existe;
+	int valor;
+	pair <char, int> temp;
+	for(char a : exp){
+		if(isVariable(a)){
+			existe = 0;
+			for(pair<char,int> b : variables)
+				if(b.first == a)
+					existe = 1;
+			if(!existe){
+				cout << "Dame un valor para " << a << ": ";
+				cin >> valor;
+				temp = make_pair(a,valor);
+				variables.push_back(temp);
+			}
+		}
+	}
+} 
 
 
 int main(){
 	string exp = comprobar();
 	Nodo* ar = new Nodo();
 	expresionToTree(ar,exp);
-	cout << "El resultado es: " << evaluar(ar) << '\n';
+	vector<pair<char,int>> variables;
+	while(1){
+		var(exp,variables);
+		cout << "El resultado es: " << evaluar(ar,variables) << '\n';
+		variables.clear();
+	}
 }
