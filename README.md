@@ -35,5 +35,5 @@ Uso de arboles binarios para la elaboracion de un evaluador de funciones.
 
 Practica 8:
 
-Uso de arboles binarios para la impleentacion de una agenda.
+Uso de arboles binarios AVL para la implementacion de una agenda.
 
