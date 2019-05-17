@@ -97,16 +97,13 @@ class AVL_Tree(object):
         if balance > 1 and self.obtenerBalanceo(root.izq) >= 0: 
             return self.rightRotate(root) 
   
-        # Case 2 - Right Right 
         if balance < -1 and self.obtenerBalanceo(root.der) <= 0: 
             return self.leftRotate(root) 
   
-        # Case 3 - Left Right 
         if balance > 1 and self.obtenerBalanceo(root.izq) < 0: 
             root.izq = self.leftRotate(root.izq) 
             return self.rightRotate(root) 
   
-        # Case 4 - Right Left 
         if balance < -1 and self.obtenerBalanceo(root.der) > 0: 
             root.der = self.rightRotate(root.der) 
             return self.leftRotate(root) 
