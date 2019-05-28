@@ -44,8 +44,7 @@ class AVL_Tree(object):
         else: 
             root.der = self.insert(root.der, nombre, dir, correo, num) 
   
-        root.peso = 1 + max(self.obtenerPeso(root.izq), 
-                           self.obtenerPeso(root.der)) 
+        root.peso = 1 + max(self.obtenerPeso(root.izq), self.obtenerPeso(root.der)) 
   
         balance = self.obtenerBalanceo(root)
         print(balance)
@@ -88,18 +87,16 @@ class AVL_Tree(object):
                 temp = root.izq 
                 root = None
                 return temp 
-            temp = self.getMinValueNode(root.der) 
+            temp = self.getMinValueNode(root.der)
             root.nombre = temp.nombre
-            root.der = self.eliminar(root.right, temp.nombre)
+            root.der = self.eliminar(root.der, temp.nombre)
 
         if root is None:
                 return root
-        root.peso = 1 + max(self.obtenerPeso(root.izq), 
-                           self.obtenerPeso(root.der)) 
+        root.peso = 1 + max(self.obtenerPeso(root.izq), self.obtenerPeso(root.der)) 
   
         balance = self.obtenerBalanceo(root) 
 
-        print("Por favor ayuda")
 
         if balance > 1 and self.obtenerBalanceo(root.izq) >= 0: 
             print("Rotacion derecha")
@@ -130,10 +127,8 @@ class AVL_Tree(object):
         y.izq = z 
         z.der = T2 
   
-        z.peso = 1 + max(self.obtenerPeso(z.izq), 
-                         self.obtenerPeso(z.der)) 
-        y.peso = 1 + max(self.obtenerPeso(y.izq), 
-                         self.obtenerPeso(y.der)) 
+        z.peso = 1 + max(self.obtenerPeso(z.izq), self.obtenerPeso(z.der)) 
+        y.peso = 1 + max(self.obtenerPeso(y.izq), self.obtenerPeso(y.der)) 
   
         return y 
   
@@ -146,7 +141,7 @@ class AVL_Tree(object):
         z.izq = T3 
   
         z.peso = 1 + max(self.obtenerPeso(z.izq), self.obtenerPeso(z.der)) 
-        y.peso = 1 + max(self.obtenerPeso(y.izq), self.obtenerBalanceo(y.der))
+        y.peso = 1 + max(self.obtenerPeso(y.izq), self.obtenerPeso(y.der))
         return y
     def obtenerPeso(self, root):
         if not root:
@@ -158,12 +153,14 @@ class AVL_Tree(object):
         if not root: 
             return 0
         return self.obtenerPeso(root.izq) - self.obtenerPeso(root.der)
+
     def inorder(self, root):
         if not root:
             return
         root.imprimirNodo()
         self.inorder(root.izq)
         self.inorder(root.der)
+
     def getMinValueNode(self, root): 
         if root is None or root.izq is None: 
             return root 
@@ -253,9 +250,6 @@ def menu():
         else:
             break
         
-
-
-
 
 
 menu()
