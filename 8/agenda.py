@@ -47,20 +47,26 @@ class AVL_Tree(object):
         root.peso = 1 + max(self.obtenerPeso(root.izq), 
                            self.obtenerPeso(root.der)) 
   
-        balance = self.obtenerBalanceo(root) 
+        balance = self.obtenerBalanceo(root)
+        print(balance)
+
 
 
         if balance > 1 and strcpr(nombre,root.izq.nombre) == -1:
+            print("Rotacion derecha")
             return self.rightRotate(root) 
   
         if balance < -1 and strcpr(nombre,root.der.nombre) == 1: 
+            print("Rotacion izquierda")
             return self.leftRotate(root) 
   
         if balance > 1 and strcpr(nombre,root.izq.nombre) == 1: 
+            print("Rotacion izquierda y luego derecha")
             root.izq = self.leftRotate(root.izq) 
             return self.rightRotate(root) 
   
         if balance < -1 and strcpr(nombre,root.der.nombre) == -1:
+            print("Rotacion derecha y luego izquierda")
             root.der = self.rightRotate(root.der) 
             return self.leftRotate(root) 
 
@@ -84,7 +90,7 @@ class AVL_Tree(object):
                 return temp 
             temp = self.getMinValueNode(root.der) 
             root.nombre = temp.nombre
-            root.der = self.delete(root.right, temp.nombre)
+            root.der = self.eliminar(root.right, temp.nombre)
 
         if root is None:
                 return root
@@ -93,18 +99,23 @@ class AVL_Tree(object):
   
         balance = self.obtenerBalanceo(root) 
 
+        print("Por favor ayuda")
 
         if balance > 1 and self.obtenerBalanceo(root.izq) >= 0: 
+            print("Rotacion derecha")
             return self.rightRotate(root) 
   
         if balance < -1 and self.obtenerBalanceo(root.der) <= 0: 
+            print("Rotacion izquierda")
             return self.leftRotate(root) 
   
         if balance > 1 and self.obtenerBalanceo(root.izq) < 0: 
+            print("Rotacion izquierda y luego derecha")
             root.izq = self.leftRotate(root.izq) 
             return self.rightRotate(root) 
   
         if balance < -1 and self.obtenerBalanceo(root.der) > 0: 
+            print("Rotacion derecha y luego izquierda")
             root.der = self.rightRotate(root.der) 
             return self.leftRotate(root) 
   
@@ -138,6 +149,7 @@ class AVL_Tree(object):
                         self.obtenerPeso(z.der)) 
         y.peso = 1 + max(self.obtenerPeso(y.izq), 
                         self.obtenerBalanceo(y.der))
+        return y
     def obtenerPeso(self, root):
         if not root:
             return 0
@@ -147,8 +159,7 @@ class AVL_Tree(object):
     def obtenerBalanceo(self, root): 
         if not root: 
             return 0
-  
-        return self.obtenerBalanceo(root.izq) - self.obtenerBalanceo(root.der)
+        return self.obtenerPeso(root.izq) - self.obtenerPeso(root.der)
     def inorder(self, root):
         if not root:
             return
