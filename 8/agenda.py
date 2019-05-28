@@ -145,10 +145,8 @@ class AVL_Tree(object):
         y.der = z 
         z.izq = T3 
   
-        z.peso = 1 + max(self.obtenerPeso(z.izq), 
-                        self.obtenerPeso(z.der)) 
-        y.peso = 1 + max(self.obtenerPeso(y.izq), 
-                        self.obtenerBalanceo(y.der))
+        z.peso = 1 + max(self.obtenerPeso(z.izq), self.obtenerPeso(z.der)) 
+        y.peso = 1 + max(self.obtenerPeso(y.izq), self.obtenerBalanceo(y.der))
         return y
     def obtenerPeso(self, root):
         if not root:
