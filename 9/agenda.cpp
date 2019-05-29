@@ -1,22 +1,23 @@
 #include<iostream> 
-using namespace std; 
+using namespace std;
+template <class T>
 struct BTreeNode{ 
-	int *keys;
+	T *keys;
 	int t;
-	BTreeNode **C;
+	BTreeNode<T> **C;
 	int n;
 	bool leaf;
-    BTreeNode(int t1, bool leaf1) { 
+    BTreeNode(T t1, bool leaf1) { 
     	t = t1; 
     	leaf = leaf1; 
 
-    	keys = new int[2*t-1]; 
-    	C = new BTreeNode *[2*t]; 
+    	keys = new T[2*t-1]; 
+    	C = new BTreeNode<T> *[2*t]; 
 
     	n = 0; 
     } 
 
-    void insertNonFull(int k) { 
+    void insertNonFull(T k) { 
     	int i = n-1; 
 
     	if (leaf == true){ 
@@ -42,8 +43,8 @@ struct BTreeNode{
     	} 
     } 
 
-    void splitChild(int i, BTreeNode *y){ 
-    	BTreeNode *z = new BTreeNode(y->t, y->leaf); 
+    void splitChild(int i, BTreeNode<T> *y){ 
+    	BTreeNode<T> *z = new BTreeNode(y->t, y->leaf); 
     	z->n = t - 1; 
 
     	for (int j = 0; j < t-1; j++) 
@@ -81,7 +82,7 @@ struct BTreeNode{
 	    	C[i]->traverse(); 
     }  
 
-	BTreeNode *search(int k){ 
+	BTreeNode<T> *search(T k){ 
 	    int i = 0; 
 	    while (i < n && k > keys[i]) 
 	    	i++; 
@@ -94,9 +95,9 @@ struct BTreeNode{
  
 
 }; 
-
+template <class T>
 struct BTree{ 
-	BTreeNode *root;
+	BTreeNode<T> *root;
 	int t;
 	BTree(int _t){
         root = NULL;
@@ -107,19 +108,19 @@ struct BTree{
         if (root != NULL) root->traverse();
     } 
 
-	BTreeNode* search(int k){
+	BTreeNode<T>* search(T k){
         return (root == NULL)? NULL : root->search(k);
     } 
 
-	void insert(int k){ 
+	void insert(T k){ 
 	    if (root == NULL){ 
-	    	root = new BTreeNode(t, true); 
+	    	root = new BTreeNode<T>(t, true); 
 	    	root->keys[0] = k; 
 	    	root->n = 1;
 	    } 
 	    else{ 
 	    	if (root->n == 2*t-1){ 
-	    		BTreeNode *s = new BTreeNode(t, false); 
+	    		BTreeNode<T> *s = new BTreeNode<T>(t, false); 
 
 	    		s->C[0] = root; 
 
@@ -146,7 +147,7 @@ struct BTree{
 
 int main() 
 { 
-	BTree t(4);
+	BTree<int> t(4);
 	t.insert(10); 
 	t.insert(20); 
 	t.insert(5); 
