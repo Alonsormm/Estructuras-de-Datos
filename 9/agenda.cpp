@@ -1,140 +1,149 @@
 #include<iostream> 
 using namespace std;
+
+class Persona{
+    string nombre;
+    string dirrecion;
+    string telefono;
+    string numero;
+};
+
+
 template <class T>
 struct BTreeNode{ 
 	T *datos;
-	int t;
-	BTreeNode<T> **C;
-	int n;
-	bool leaf;
-    BTreeNode(T t1, bool leaf1) { 
-    	t = t1; 
-    	leaf = leaf1; 
+	int grado;
+	BTreeNode<T> **hijos;
+	int actual;
+	bool hoja;
+    BTreeNode(T _grado, bool _hoja) { 
+    	grado = _grado; 
+    	hoja = _hoja; 
 
-    	datos = new T[2*t-1]; 
-    	C = new BTreeNode<T> *[2*t]; 
+    	datos = new T[2*grado-1]; 
+    	hijos = new BTreeNode<T> *[2*grado]; 
 
-    	n = 0; 
+    	actual = 0; 
     } 
 
-    void insertNonFull(T k) { 
-    	int i = n-1; 
+    void insertarNoLleno(T k) { 
+    	int i = actual-1; 
 
-    	if (leaf == true){ 
+    	if (hoja == true){ 
     		while (i >= 0 && datos[i] > k){ 
     			datos[i+1] = datos[i]; 
     			i--; 
     		} 
 
     		datos[i+1] = k; 
-    		n = n+1; 
+    		actual++; 
     	} 
     	else{ 
     		while (i >= 0 && datos[i] > k) 
     			i--; 
 
-    		if (C[i+1]->n == 2*t-1){ 
-    			splitChild(i+1, C[i+1]); 
+    		if (hijos[i+1]->actual == 2*grado-1){ 
+    			dividirHijos(i+1, hijos[i+1]); 
 
     			if (datos[i+1] < k) 
     				i++; 
     		} 
-    		C[i+1]->insertNonFull(k); 
+    		hijos[i+1]->insertarNoLleno(k); 
     	} 
     } 
 
-    void splitChild(int i, BTreeNode<T> *y){ 
-    	BTreeNode<T> *z = new BTreeNode(y->t, y->leaf); 
-    	z->n = t - 1; 
+    void dividirHijos(int i, BTreeNode<T> *y){ 
+    	BTreeNode<T> *z = new BTreeNode(y->grado, y->hoja); 
+    	z->actual = grado - 1; 
 
-    	for (int j = 0; j < t-1; j++) 
-    		z->datos[j] = y->datos[j+t]; 
+    	for (int j = 0; j < grado-1; j++) 
+    		z->datos[j] = y->datos[j+grado]; 
 
-    	if (y->leaf == false){ 
-    		for (int j = 0; j < t; j++) 
-    			z->C[j] = y->C[j+t]; 
+    	if (y->hoja == false){ 
+    		for (int j = 0; j < grado; j++) 
+    			z->hijos[j] = y->hijos[j+grado]; 
     	} 
 
-    	y->n = t - 1; 
+    	y->actual = grado - 1; 
 
-    	for (int j = n; j >= i+1; j--) 
-    		C[j+1] = C[j]; 
+    	for (int j = actual; j >= i+1; j--) 
+    		hijos[j+1] = hijos[j]; 
 
-    	C[i+1] = z; 
+    	hijos[i+1] = z; 
 
-    	for (int j = n-1; j >= i; j--) 
+    	for (int j = actual-1; j >= i; j--) 
     		datos[j+1] = datos[j]; 
 
-    	datos[i] = y->datos[t-1]; 
+    	datos[i] = y->datos[grado-1]; 
 
-    	n = n + 1; 
+    	actual++; 
     }  
 
-	void traverse(){ 
+	void recorrer(){ 
 	    int i; 
-	    for (i = 0; i < n; i++){ 
-	    	if (leaf == false) 
-	    		C[i]->traverse(); 
+	    for (i = 0; i < actual; i++){ 
+	    	if (hoja == false) 
+	    		hijos[i]->recorrer(); 
 	    	cout << " " << datos[i]; 
 	    } 
 
-	    if (leaf == false) 
-	    	C[i]->traverse(); 
+	    if (hoja == false) 
+	    	hijos[i]->recorrer(); 
     }  
 
 	BTreeNode<T> *search(T k){ 
 	    int i = 0; 
-	    while (i < n && k > datos[i]) 
+	    while (i < actual && k > datos[i]) 
 	    	i++; 
 	    if (datos[i] == k) 
 	    	return this; 
-	    if (leaf == true) 
+	    if (hoja == true) 
 	    	return NULL; 
-	    return C[i]->search(k); 
+	    return hijos[i]->search(k); 
     } 
  
 
 }; 
 template <class T>
 struct BTree{ 
-	BTreeNode<T> *root;
-	int t;
-	BTree(int _t){
-        root = NULL;
-        t = _t;
+	BTreeNode<T> *raiz;
+	int grado;
+	BTree(int _grado){
+        raiz = NULL;
+        grado = _grado;
     } 
 
-	void traverse(){
-        if (root != NULL) root->traverse();
+	void recorrer(){
+        if (raiz != NULL) raiz->recorrer();
     } 
 
 	BTreeNode<T>* search(T k){
-        return (root == NULL)? NULL : root->search(k);
+        return (raiz == NULL)? NULL : raiz->search(k);
     } 
 
-	void insert(T k){ 
-	    if (root == NULL){ 
-	    	root = new BTreeNode<T>(t, true); 
-	    	root->datos[0] = k; 
-	    	root->n = 1;
+	void insertar(T k){ 
+	    if (raiz == NULL){ 
+	    	raiz = new BTreeNode<T>(grado, true); 
+	    	raiz->datos[0] = k; 
+	    	raiz->actual = 1;
 	    } 
 	    else{ 
-	    	if (root->n == 2*t-1){ 
-	    		BTreeNode<T> *s = new BTreeNode<T>(t, false); 
+	    	if (raiz->actual == 2*grado-1){ 
+	    		BTreeNode<T> *s = new BTreeNode<T>(grado, false); 
 
-	    		s->C[0] = root; 
+	    		s->hijos[0] = raiz; 
 
-	    		s->splitChild(0, root); 
+	    		s->dividirHijos(0, raiz); 
 
 	    		int i = 0; 
 	    		if (s->datos[0] < k) 
 	    			i++; 
-	    		s->C[i]->insertNonFull(k); 
+	    		s->hijos[i]->insertarNoLleno(k); 
 
-	    		root = s; 
+	    		raiz = s; 
 	    	} 
 	    	else
-	    		root->insertNonFull(k); 
+	    		raiz->insertarNoLleno(k); 
 	    } 
     } 
 }; 
@@ -148,23 +157,23 @@ struct BTree{
 int main() 
 { 
 	BTree<int> t(4);
-	t.insert(10); 
-	t.insert(20); 
-	t.insert(5); 
-	t.insert(6); 
-	t.insert(12); 
-	t.insert(30); 
-	t.insert(7); 
-	t.insert(17); 
+	t.insertar(10); 
+	t.insertar(20); 
+	t.insertar(5); 
+	t.insertar(6); 
+	t.insertar(12); 
+	t.insertar(30); 
+	t.insertar(7); 
+	t.insertar(17); 
 
 	cout << "Traversal of the constucted tree is "; 
-	t.traverse(); 
+	t.recorrer(); 
 
 	int k = 6; 
-	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present"; 
+	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
 
 	k = 15; 
-	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present"; 
+	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
 
 	return 0; 
 } 
