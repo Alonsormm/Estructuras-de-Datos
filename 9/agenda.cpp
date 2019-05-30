@@ -1,13 +1,77 @@
-#include<iostream> 
+#include <bits/stdc++.h>
+
 using namespace std;
 
-class Persona{
+int obtenerMasGrande(string a, string b){
+    int tama = a.size();
+    int tamb = b.size();
+    int tamF;
+    if(tama >= tamb)
+        tamF = tama;
+    else
+        tamF = tamb;
+    return tamF;
+}
+
+struct Persona{
     string nombre;
     string dirrecion;
     string telefono;
-    string numero;
+    string correo;
+
+    Persona(string n, string d, string t, string c){
+        nombre = n;
+        dirrecion = d;
+        telefono = t;
+        correo = c;
+    }
+    Persona(){}
+
+    bool operator>(Persona a){
+        int tamF = obtenerMasGrande(nombre, a.nombre);
+        for(int i = 0 ; i < tamF; i++){
+            if(nombre[i] == a.nombre[i])
+                continue;
+            else if(nombre[i] > a.nombre[i])
+                return true;
+        }
+        return false;
+    }
+    bool operator<(Persona a){
+        int tamF = obtenerMasGrande(nombre, a.nombre);
+        for(int i = 0 ; i < tamF; i++){
+            if(nombre[i] == a.nombre[i])
+                continue;
+            else if(nombre[i] < a.nombre[i])
+                return true;
+        }
+        return false;
+    }
+    bool operator== (Persona a){
+        int tam = nombre.size();
+        if(a.nombre.size() != tam)
+            return false;
+        for(int i = 0 ; i < tam ; i++)
+            if(a.nombre[i] != nombre[i])
+                return false;
+        return true;
+    }
+    bool operator<= (Persona a){
+        return nombre < a.nombre || nombre == a.nombre;
+    }
+    bool operator>= (Persona a){
+        return nombre > a.nombre || nombre == a.nombre;
+    }
+    
 };
 
+ostream &operator << (ostream& os,const Persona &a){
+     os << "Nombre: " << a.nombre << '\n';
+     os << "Dirrecion: " << a.dirrecion << '\n';
+     os << "Telefono: " << a.telefono << '\n';
+     os << "Correo: " << a.correo << '\n';
+     return os;
+}
 
 template <class T>
 struct BTreeNode{ 
@@ -16,7 +80,7 @@ struct BTreeNode{
 	BTreeNode<T> **hijos;
 	int actual;
 	bool hoja;
-    BTreeNode(T _grado, bool _hoja) { 
+    BTreeNode(int _grado, bool _hoja) { 
     	grado = _grado; 
     	hoja = _hoja; 
 
@@ -84,7 +148,7 @@ struct BTreeNode{
 	    for (i = 0; i < actual; i++){ 
 	    	if (hoja == false) 
 	    		hijos[i]->recorrer(); 
-	    	cout << " " << datos[i]; 
+	    	cout << datos[i]; 
 	    } 
 
 	    if (hoja == false) 
@@ -149,31 +213,48 @@ struct BTree{
 }; 
 
 
+vector<string> dividir(string dato){
+    vector<string> temp(4);
+    int j = 0;
+    for(int i = 0 ; i < dato.size(); i++){
+        if(dato[i]==','){
+            j++;
+            continue;
+        }
+        temp[j]+=dato[i];
+    }
+    return temp;
+}
+
+void ficheroArbol(BTree<Persona> &arbol){
+    fstream txtFile;
+    string dato, nombre,direccion, numero, correo;
+    vector<string> temp(4);
+    txtFile.open("datos_agenda - data.csv");
+    while(getline(txtFile,dato)){
+        temp = dividir(dato);
+        nombre = temp[0];
+        direccion = temp[1];
+        numero = temp[2];
+        correo = temp[3];
+    }
+    fflush(stdin);
+    txtFile.close();
+}
 
 
 
+int main() { 
+	BTree<Persona> t(4);
+    Persona a("Alonso", "asda", "asda","asda");
 
+    Persona b("Blonso", "asda", "asda","asda");
 
-int main() 
-{ 
-	BTree<int> t(4);
-	t.insertar(10); 
-	t.insertar(20); 
-	t.insertar(5); 
-	t.insertar(6); 
-	t.insertar(12); 
-	t.insertar(30); 
-	t.insertar(7); 
-	t.insertar(17); 
+    Persona c("Alan", "asda", "asda","asda");
 
-	cout << "Traversal of the constucted tree is "; 
-	t.recorrer(); 
-
-	int k = 6; 
-	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
-
-	k = 15; 
-	(t.search(k) != NULL)? cout << "\nPresent" : cout << "\nNot Present\n"; 
-
+	t.insertar(a);
+	t.insertar(b); 
+	t.insertar(c); 
+	t.recorrer();
 	return 0; 
 } 
