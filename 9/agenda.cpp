@@ -2,7 +2,7 @@
 using namespace std;
 template <class T>
 struct BTreeNode{ 
-	T *keys;
+	T *datos;
 	int t;
 	BTreeNode<T> **C;
 	int n;
@@ -11,7 +11,7 @@ struct BTreeNode{
     	t = t1; 
     	leaf = leaf1; 
 
-    	keys = new T[2*t-1]; 
+    	datos = new T[2*t-1]; 
     	C = new BTreeNode<T> *[2*t]; 
 
     	n = 0; 
@@ -21,22 +21,22 @@ struct BTreeNode{
     	int i = n-1; 
 
     	if (leaf == true){ 
-    		while (i >= 0 && keys[i] > k){ 
-    			keys[i+1] = keys[i]; 
+    		while (i >= 0 && datos[i] > k){ 
+    			datos[i+1] = datos[i]; 
     			i--; 
     		} 
 
-    		keys[i+1] = k; 
+    		datos[i+1] = k; 
     		n = n+1; 
     	} 
     	else{ 
-    		while (i >= 0 && keys[i] > k) 
+    		while (i >= 0 && datos[i] > k) 
     			i--; 
 
     		if (C[i+1]->n == 2*t-1){ 
     			splitChild(i+1, C[i+1]); 
 
-    			if (keys[i+1] < k) 
+    			if (datos[i+1] < k) 
     				i++; 
     		} 
     		C[i+1]->insertNonFull(k); 
@@ -48,7 +48,7 @@ struct BTreeNode{
     	z->n = t - 1; 
 
     	for (int j = 0; j < t-1; j++) 
-    		z->keys[j] = y->keys[j+t]; 
+    		z->datos[j] = y->datos[j+t]; 
 
     	if (y->leaf == false){ 
     		for (int j = 0; j < t; j++) 
@@ -63,9 +63,9 @@ struct BTreeNode{
     	C[i+1] = z; 
 
     	for (int j = n-1; j >= i; j--) 
-    		keys[j+1] = keys[j]; 
+    		datos[j+1] = datos[j]; 
 
-    	keys[i] = y->keys[t-1]; 
+    	datos[i] = y->datos[t-1]; 
 
     	n = n + 1; 
     }  
@@ -75,7 +75,7 @@ struct BTreeNode{
 	    for (i = 0; i < n; i++){ 
 	    	if (leaf == false) 
 	    		C[i]->traverse(); 
-	    	cout << " " << keys[i]; 
+	    	cout << " " << datos[i]; 
 	    } 
 
 	    if (leaf == false) 
@@ -84,9 +84,9 @@ struct BTreeNode{
 
 	BTreeNode<T> *search(T k){ 
 	    int i = 0; 
-	    while (i < n && k > keys[i]) 
+	    while (i < n && k > datos[i]) 
 	    	i++; 
-	    if (keys[i] == k) 
+	    if (datos[i] == k) 
 	    	return this; 
 	    if (leaf == true) 
 	    	return NULL; 
@@ -115,7 +115,7 @@ struct BTree{
 	void insert(T k){ 
 	    if (root == NULL){ 
 	    	root = new BTreeNode<T>(t, true); 
-	    	root->keys[0] = k; 
+	    	root->datos[0] = k; 
 	    	root->n = 1;
 	    } 
 	    else{ 
@@ -127,7 +127,7 @@ struct BTree{
 	    		s->splitChild(0, root); 
 
 	    		int i = 0; 
-	    		if (s->keys[0] < k) 
+	    		if (s->datos[0] < k) 
 	    			i++; 
 	    		s->C[i]->insertNonFull(k); 
 
