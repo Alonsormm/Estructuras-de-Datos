@@ -148,7 +148,7 @@ struct BTreeNode{
 	    for (i = 0; i < actual; i++){ 
 	    	if (hoja == false) 
 	    		hijos[i]->recorrer(); 
-	    	cout << datos[i]; 
+	    	cout << datos[i] << '\n'; 
 	    } 
 
 	    if (hoja == false) 
@@ -226,18 +226,23 @@ vector<string> dividir(string dato){
     return temp;
 }
 
-void ficheroArbol(BTree<Persona> &arbol){
+void ficheroArbol(){
+	BTree<Persona> t(100);
     fstream txtFile;
     string dato, nombre,direccion, numero, correo;
     vector<string> temp(4);
-    txtFile.open("datos_agenda - data.csv");
+    txtFile.open("datos_agenda.csv");
+    cout << "Hola\n";
     while(getline(txtFile,dato)){
         temp = dividir(dato);
         nombre = temp[0];
         direccion = temp[1];
         numero = temp[2];
         correo = temp[3];
+        Persona semp(nombre,direccion,numero,correo);
+        t.insertar(semp);
     }
+    t.recorrer();
     fflush(stdin);
     txtFile.close();
 }
@@ -245,16 +250,11 @@ void ficheroArbol(BTree<Persona> &arbol){
 
 
 int main() { 
-	BTree<Persona> t(4);
-    Persona a("Alonso", "asda", "asda","asda");
-
-    Persona b("Blonso", "asda", "asda","asda");
-
-    Persona c("Alan", "asda", "asda","asda");
-
-	t.insertar(a);
-	t.insertar(b); 
-	t.insertar(c); 
-	t.recorrer();
+    //ficheroArbol();
+    BTree <Persona>(4);
+    Persona a("ASda","asdas","Asdasd","asda");
+    Persona b("Cada", "asda","asda","asda");
+    if(a<b)
+        cout << a;
 	return 0; 
 } 
